@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Futures Leverage Trading Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7f6;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background-color: #fff;
+      padding: 30px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      width: 100%;
+      max-width: 500px;
+    }
+    h2 {
+      text-align: center;
+      color: #4CAF50;
+    }
+    label {
+      font-weight: bold;
+      margin-bottom: 8px;
+      display: block;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 14px 20px;
+      width: 100%;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .result {
+      margin-top: 20px;
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      font-weight: bold;
+    }
+    .result p {
+      margin: 8px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Futures Leverage Trading Calculator</h2>
+    <label for="assetName">Asset Name (optional)</label>
+    <input type="text" id="assetName" placeholder="e.g., BTC, ETH, Gold">
+
+    <label for="entryPrice">Entry Price</label>
+    <input type="number" id="entryPrice" step="0.01">
+
+    <label for="exitPrice">Exit Price</label>
+    <input type="number" id="exitPrice" step="0.01">
+
+    <label for="positionSize">Position Size (in $)</label>
+    <input type="number" id="positionSize" step="0.01">
+
+    <label for="leverage">Leverage (e.g., 5 for 5x)</label>
+    <input type="number" id="leverage" step="0.1">
+
+    <label for="positionType">Position Type</label>
+    <select id="positionType">
+      <option value="long">Long</option>
+      <option value="short">Short</option>
+    </select>
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function calculate() {
+      const asset = document.getElementById('assetName').value || 'Asset';
+      const entry = parseFloat(document.getElementById('entryPrice').value);
+      const exit = parseFloat(document.getElementById('exitPrice').value);
+      const size = parseFloat(document.getElementById('positionSize').value);
+      const leverage = parseFloat(document.getElementById('leverage').value);
+      const type = document.getElementById('positionType').value;
+
+      if (isNaN(entry) || isNaN(exit) || isNaN(size) || isNaN(leverage)) {
+        document.getElementById('result').textContent = "Please fill in all fields correctly.";
+        return;
+      }
+
+      let priceDiff = (type === 'long') ? (exit - entry) : (entry - exit);
+      let units = size / entry;
+      let pnl = priceDiff * units * leverage;
+      let roi = (pnl / (size / leverage)) * 100;
+
+      document.getElementById('result').innerHTML = `
+        <p><strong>${asset} Trade Result:</strong></p>
+        <p>Profit/Loss: $${pnl.toFixed(2)}</p>
+        <p>ROI: ${roi.toFixed(2)}%</p>
+      `;
+    }
+  </script>
+
+</body>
+</html>
